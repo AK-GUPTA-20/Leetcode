@@ -1,29 +1,36 @@
 class Solution {
     public int[] topKFrequent(int[] nums, int k) {
-        List<Integer>[] bucket = new ArrayList[nums.length+1];  //  make a bucket
-        HashMap<Integer,Integer> map = new HashMap<>();    // make a map
-
-        for(int num : nums){
-            map.put(num,map.getOrDefault(num,0)+1);
+        
+        //  create a hashmap
+        Map<Integer,Integer> mp = new HashMap<>();
+        for(int n : nums){
+            mp.put(n,mp.getOrDefault(n,0)+1);
         }
 
-        for(int key : map.keySet()){
-            int freq = map.get(key);
-            if(bucket[freq] == null){
-                bucket[freq] = new ArrayList<>();
-            }
-            bucket[freq].add(key);
+        // creating a space 
+        List<Integer>[] lst = new ArrayList[nums.length+1];
+        for(int i=0 ; i<lst.length ; i++){
+            lst[i] = new ArrayList<>();
         }
-        int[] ans = new int[k];
-        int pos = 0;
-        for(int i = bucket.length-1 ; i>=0 ; i--){
-            if(bucket[i]!=null){
-                for(int j = 0 ; j<bucket[i].size() && pos<k ; j++){
-                    ans[pos] = bucket[i].get(j);
-                    pos++;
-                }
-            }
+
+        //putting the values
+        for(int key : mp.keySet() ){
+            int idx = mp.get(key);
+            lst[idx].add(key);
         }
-        return ans;
+
+
+        //  adding top k element in new list
+        int[] res = new int[k];
+        int ind = 0;
+        for(int i=lst.length-1 ; i>=0 ; i--){
+            for(int num : lst[i]){
+                res[ind++] = num;
+            }
+            if(ind == k) return res;
+        }
+
+    return res;
+
     }
 }
