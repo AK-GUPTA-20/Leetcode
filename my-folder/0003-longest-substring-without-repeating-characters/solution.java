@@ -16,7 +16,7 @@ class Solution {
             }
 
             set.add(ch);
-            longest = Math.max(longest, right - left + 1);
+            longest = Math.max(longest, set.size());
         }
 
         return longest;
