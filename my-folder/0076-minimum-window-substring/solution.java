@@ -1,48 +1,44 @@
 class Solution {
     public String minWindow(String s, String t) {
-    // The idea is to make the sliding window grow till it contains all the chars of t.
-    // for that we will need a freq array of each character in t.
-      char[] sArr = s.toCharArray();
-      char[] tArr = t.toCharArray();
-      int[] freq = new int[128];
-      int startIndex=0; // the start index of the final substring
-      int size = Integer.MAX_VALUE;
-      // fill the freq array
-      for (char c : tArr){
-        freq[c]++;
-      }
-      // the number of character min in the sliding window
-      int counter = tArr.length;
-      int l = 0, r = 0;
-      // creating the window
-      while(r < sArr.length){
-        var c = sArr[r];
-        // If the character is needed reduce the counter 
-        if (freq[c] > 0){
-            counter--;
-        }
-        freq[c]--;
-        
-        // If the window contains all the required chars, try reduce it 
-        while(counter == 0){
-            // save the substring 
-            if (size > r - l + 1){
-                startIndex = l;
-                size = r - l + 1;
-            }
-            // move the left cursor
-            var cc = sArr[l];
-            freq[cc]++;
-
-            if (freq[cc] > 0){
-                counter++;
-            }
-            l++;
-        }
-        r++; 
-      } 
-      if(size == Integer.MAX_VALUE)
+        if (t.length() > s.length()) {
             return "";
-        return s.substring(startIndex, startIndex+size);
+        }
+
+        Map<Character, Integer> need = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            need.put(ch, need.getOrDefault(ch, 0) + 1);
+        }
+
+        Map<Character, Integer> window = new HashMap<>();
+        int have = 0, needCount = need.size();
+        int left = 0, right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int start = 0;
+
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            window.put(ch, window.getOrDefault(ch, 0) + 1);
+
+            if (need.containsKey(ch) && window.get(ch).equals(need.get(ch))) {
+                have++;
+            }
+
+            while (have == needCount) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+
+                char leftChar = s.charAt(left);
+                window.put(leftChar, window.get(leftChar) - 1);
+                if (need.containsKey(leftChar) && window.get(leftChar) < need.get(leftChar)) {
+                    have--;
+                }
+                left++;
+            }
+            right++;
+        }
+
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
     }
 }
