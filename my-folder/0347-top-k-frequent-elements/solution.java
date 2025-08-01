@@ -1,36 +1,22 @@
 class Solution {
     public int[] topKFrequent(int[] nums, int k) {
-        
-        //  create a hashmap
-        Map<Integer,Integer> mp = new HashMap<>();
-        for(int n : nums){
-            mp.put(n,mp.getOrDefault(n,0)+1);
+        // Step 1: Frequency map
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
         }
 
-        // creating a space 
-        List<Integer>[] lst = new ArrayList[nums.length+1];
-        for(int i=0 ; i<lst.length ; i++){
-            lst[i] = new ArrayList<>();
-        }
+        // Step 2: Convert map to list and sort by frequency (descending)
+        List<Map.Entry<Integer, Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort((a, b) -> b.getValue() - a.getValue()); 
 
-        //putting the values
-        for(int key : mp.keySet() ){
-            int idx = mp.get(key);
-            lst[idx].add(key);
-        }
-
-
-        //  adding top k element in new list
+        // Step 3: Collect top K keys
         int[] res = new int[k];
-        int ind = 0;
-        for(int i=lst.length-1 ; i>=0 ; i--){
-            for(int num : lst[i]){
-                res[ind++] = num;
-            }
-            if(ind == k) return res;
+        for (int i = 0; i < k; i++) {
+            res[i] = list.get(i).getKey();
         }
 
-    return res;
-
+        return res;
     }
 }
+
