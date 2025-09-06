@@ -3,11 +3,12 @@ class Solution {
         int n = board.length;
         int m = board[0].length;
         boolean[][] isVisited = new boolean[n][m];
+        
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == word.charAt(0)) {
-                    if (backtrack(board, word, isVisited, i, j, 0)) {
+        for(int i=0 ; i<n ; i++){
+            for(int j=0 ; j<m ; j++){
+                if(board[i][j] == word.charAt(0)){
+                    if(foundOrNot(board ,word, i , j , 0 , isVisited)){
                         return true;
                     }
                 }
@@ -16,24 +17,26 @@ class Solution {
         return false;
     }
 
-    boolean backtrack(char[][] board, String word, boolean[][] isVisited, int i, int j, int index) {
-        if (index == word.length()) {
+    boolean foundOrNot(char[][] board ,String word, int i , int j , int idx , boolean[][] isVisited){
+        //base case
+        if(idx == word.length()){
             return true;
         }
-        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length ||
-            board[i][j] != word.charAt(index) || isVisited[i][j]) {
+        if(i>= board.length || j>= board[0].length || j<0 || i<0 || isVisited[i][j] || board[i][j] != word.charAt(idx)){
             return false;
         }
 
+
         isVisited[i][j] = true;
+        // check conditions
+        boolean check = foundOrNot(board ,word, i+1 , j , idx+1 , isVisited) ||
+                        foundOrNot(board ,word, i-1 , j , idx+1 , isVisited) ||
+                        foundOrNot(board ,word, i , j+1 , idx+1 , isVisited) ||
+                        foundOrNot(board ,word, i , j-1 , idx+1 , isVisited) ;
 
-        boolean found = backtrack(board, word, isVisited, i + 1, j, index + 1) ||
-                        backtrack(board, word, isVisited, i - 1, j, index + 1) ||
-                        backtrack(board, word, isVisited, i, j + 1, index + 1) ||
-                        backtrack(board, word, isVisited, i, j - 1, index + 1);
 
-        isVisited[i][j] = false; // backtrack
-        return found;
+        isVisited[i][j] = false;
+
+        return check;
     }
 }
-
