@@ -1,34 +1,30 @@
 class Solution {
-    void solve(int[] nums , List<List<Integer>> ans , List<Integer> subSet , boolean[] used){
-        // base case
-        if(subSet.size() == nums.length) {
-            ans.add(new ArrayList<>(subSet));
+    void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    void solve(int[] nums, List<List<Integer>> ans, int idx) {
+        if (idx == nums.length) {
+            List<Integer> temp = new ArrayList<>();
+            for (int num : nums) {
+                temp.add(num);
+            }
+            ans.add(temp);
             return;
         }
 
-        for(int i = 0; i < nums.length; i++) {
-            if(!used[i]) {
-                // include
-                subSet.add(nums[i]);
-                used[i] = true;
-
-                solve(nums , ans , subSet , used);
-
-                // backtrack
-                used[i] = false;
-                subSet.remove(subSet.size()-1);
-            }
+        for (int i = idx; i < nums.length; i++) {
+            swap(nums, idx, i);             
+            solve(nums, ans, idx + 1);       
+            swap(nums, idx, i);             
         }
     }
 
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
-        List<Integer> subSet = new ArrayList<>();
-        boolean[] used = new boolean[nums.length];
-
-        solve(nums , ans , subSet , used);
-
+        solve(nums, ans, 0); 
         return ans;
     }
 }
-
