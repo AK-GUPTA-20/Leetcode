@@ -1,90 +1,56 @@
 class Solution {
-    public List<List<String>> solveNQueens(int n) {
-        char [][] board = new char[n][n];
-        for(int i=0 ; i<n ; i++){
-            for(int j=0 ; j<n ; j++){
+    void backtrack(List<List<String>> res , char[][] board , int i){
+        // base case
+        if(i == board.length){
+            List<String> temp = new ArrayList<>();
+            for(char[] ch : board){
+                temp.add(new String(ch));
+            }
+            res.add(temp);
+            return;
+        }
+        for(int j=0 ; j<board.length ; j++){
+            if(isSafe(board , i , j)){
+                board[i][j] = 'Q';
+                backtrack(res , board , i+1);
                 board[i][j] = '.';
             }
         }
-        List<List<String>> ans = new ArrayList<>();
-        NQueens(board,0,ans);
-        return ans;
-    }
-
-    private void NQueens(char[][] board , int row , List<List<String>> ans ){
-        int n=board.length;
-        if(row == n){
-            List<String> l = new ArrayList<>();
-            for(int i=0 ; i<n ; i++){
-                String str = "";
-                for(int j=0 ; j<n ; j++){
-                    str += board[i][j];
-                }
-                l.add(str);
-            }
-            ans.add(l);
-            return;
-        }
-
-        for(int j=0 ; j<n ; j++){
-            if(isSafe(board,row,j)){
-                board[row][j] = 'Q';
-                NQueens(board,row+1,ans);
-                board[row][j] = '.';
-            }
-        }
+        
     }
 
     private boolean isSafe(char[][] board, int row, int col) {
         int n = board.length;
-        //  Checking the row by taking column constant
-        for(int i=0 ; i<n ; i++){
-            if(board[i][col]=='Q')  return false;
+        
+        // check column
+        for (int i = 0; i < row; i++) {
+            if (board[i][col] == 'Q') return false;
         }
-
-        // Checking column by taking row constant
-        for(int j=0 ;j<n ; j++){
-            if(board[row][j]=='Q')  return false;
+        
+        // check upper-left diagonal
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 'Q') return false;
         }
-
-        // checking the north east condition
-        int i = row;
-        int j = col;
-        while(i>=0 && j<n){
-            if(board[i][j]=='Q')  return false;
-            i--;
-            j++;
+        
+        // check upper-right diagonal
+        for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+            if (board[i][j] == 'Q') return false;
         }
-
-        // checking the south east condition
-        i = row;
-        j = col;
-        while(i<n && j<n){
-            if(board[i][j]=='Q')  return false;
-            i++;
-            j++;
-        }
-
-        // checking the north west condition
-        i = row;
-        j = col;
-        while(i>=0 && j>=0){
-            if(board[i][j]=='Q')  return false;
-            i--;
-            j--;
-        }
-
-        // checking the south west condition
-        i = row;
-        j = col;
-        while(i<n && j>=0){
-            if(board[i][j]=='Q')  return false;
-            i++;
-            j--;
-        }
-
+        
         return true;
     }
 
 
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<>();
+        char[][] board = new char[n][n];
+
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(board[i], '.');
+        }
+
+        backtrack(res , board , 0);
+
+        return res;
+    }
 }
