@@ -9,23 +9,21 @@
  * }
  */
 class Solution {
+    private ListNode left;
+
+    private boolean helper(ListNode right) {
+        if (right == null) return true;
+        boolean result = helper(right.next);
+
+        if (!result) return false;
+        
+        boolean isEqual = (left.val == right.val);
+        left = left.next;
+
+        return isEqual;
+    }
     public boolean isPalindrome(ListNode head) {
-        List<Integer> list = new ArrayList();
-        while(head!=null){
-            list.add(head.val);
-            head = head.next;
-        }
-
-        int left = 0;
-        int right = list.size()-1;
-
-        while(left<right){
-            if(list.get(left) == list.get(right)) {
-                right--;
-                left++;
-            }
-            else   return false;
-        }
-        return true;
+        left = head;
+        return helper(head);
     }
 }
