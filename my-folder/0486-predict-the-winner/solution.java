@@ -1,7 +1,7 @@
 class Solution {
     public boolean predictTheWinner(int[] nums) {
-        int diff = helper(nums, 0, nums.length - 1);
-        return diff >= 0; 
+        return helper(nums, 0, nums.length - 1) >=0 ;
+          
     }
 
     int helper(int[] nums, int i, int j) {
