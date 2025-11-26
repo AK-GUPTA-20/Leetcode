@@ -1,30 +1,34 @@
 class Solution {
-    void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
-    }
 
-    void solve(int[] nums, List<List<Integer>> ans, int idx) {
-        if (idx == nums.length) {
-            List<Integer> temp = new ArrayList<>();
-            for (int num : nums) {
-                temp.add(num);
-            }
-            ans.add(temp);
+    private void solve(int[] nums, List<Integer> arr, List<List<Integer>> ans, boolean[] isVisited) {
+        // base condition
+        if (arr.size() == nums.length) {
+            ans.add(new ArrayList<>(arr));
             return;
         }
 
-        for (int i = idx; i < nums.length; i++) {
-            swap(nums, idx, i);             
-            solve(nums, ans, idx + 1);       
-            swap(nums, idx, i);             
+        for (int i = 0; i < nums.length; i++) {
+            if (isVisited[i]) continue;
+
+            //do
+            arr.add(nums[i]);
+            isVisited[i] = true;
+
+            //recursion
+            solve(nums, arr, ans, isVisited);
+
+            // undo
+            arr.remove(arr.size() - 1);
+            isVisited[i] = false;
         }
     }
 
     public List<List<Integer>> permute(int[] nums) {
-        List<List<Integer>> ans = new ArrayList<>();
-        solve(nums, ans, 0); 
-        return ans;
+        List<List<Integer>> result = new ArrayList<>();
+        boolean[] isVisited = new boolean[nums.length];
+
+        solve(nums, new ArrayList<>(), result, isVisited);
+        return result;
     }
 }
+
