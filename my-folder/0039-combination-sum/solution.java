@@ -1,37 +1,27 @@
 class Solution {
-    void getCombination(int[] arr, int target ,  List<List<Integer>> ans , List<Integer> lst , int idx){
-        //base case
-        
+    public void getCandidate(int[] arr, int target, int idx, List<List<Integer>> ans, List<Integer> temp ){
+        // base Case
         if(target == 0){
-            ans.add(new ArrayList<>(lst));
-            return;
+            ans.add(new ArrayList<>(temp));
+            return;        
+        }
+        if(target < 0 || arr.length<=idx){    
+            return;        
         }
 
-        if(idx == arr.length || target < 0){
-            return ;
-        }
-
+        // Single Include
+        temp.add(arr[idx]);
+ 
+        getCandidate(arr, target-arr[idx], idx, ans, temp);
+        temp.remove(temp.size()-1);
+        getCandidate(arr, target, idx+1, ans, temp);
         
-
-        // single include
-        lst.add(arr[idx]);
-       
-        //multiple include 
-        getCombination(arr , target-arr[idx] , ans , lst , idx);
-
-        //exclude {before exclude remove/clear}
-
-        lst.remove(lst.size()-1);
-        getCombination(arr , target , ans , lst , idx+1);
 
     }
 
-
-    public List<List<Integer>> combinationSum(int[] arr, int target) {
-        List<List<Integer>> ans = new ArrayList<>();
-        List<Integer> lst = new ArrayList<>();
-
-        getCombination(arr,target , ans , lst , 0);
-        return ans;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        getCandidate(candidates, target, 0, result, new ArrayList<>() );
+        return result;
     }
 }
