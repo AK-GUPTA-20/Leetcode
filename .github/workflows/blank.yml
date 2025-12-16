@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Sync Leetcode
-        uses: anztrax/leetcode-sync@v2.0.0
+        uses: joshcai/leetcode-sync@v2.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           leetcode-session: ${{ secrets.LEETCODE_SESSION }}
